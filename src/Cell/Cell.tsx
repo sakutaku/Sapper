@@ -2,13 +2,19 @@ import React from "react";
 
 
 interface ICell {
-    hiddenEl: string;
     onCellClick: React.MouseEventHandler;
+    className: string,
+    item: Game;
 }
 
-const Cell: React.FC<ICell> = ({hiddenEl, onCellClick}) => {
+const Cell: React.FC<ICell> = ({onCellClick, className, item}) => {
+
+    if (item.hasItem === true) {
+        return (<span className={className} onClick={onCellClick}>{0} </span>)
+    }
+
     return(
-        <div className="cell" onClick={onCellClick}>{hiddenEl}</div>
+        <span className={className} onClick={onCellClick}>{} </span>
     );
 };
 

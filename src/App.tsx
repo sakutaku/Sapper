@@ -1,53 +1,75 @@
 import React, {useState} from 'react';
-import Cell from "./Cell/Cell";
 import './App.css';
+import Board from "./Board/Board";
+import ResetButton from "./ResetButton/ResetButton";
 
 const App = () => {
-
   const createMainTable = () => {
     let arr: Game[] =[];
-
-    type Game = {
-      hasItem: boolean,
-      clicked: boolean,
-    };
 
     for(let i = 0; i < 36; i++) {
       arr.push({
         hasItem: false,
         clicked: false,
+        id: i,
+        class: 'cell',
       });
     }
 
     const randomElOfArr = Math.floor(Math.random() * arr.length);
-    arr[randomElOfArr] = {hasItem: true, clicked: false};
+    arr[randomElOfArr].hasItem = true;
 
     return arr;
   };
 
   const [items, setItems] = useState(createMainTable());
-
-  const onCellClick = () => {
-
-    console.log('clicked');
-  };
-
-  const listOfCells = items.map(item => {
-    return (
-        <Cell onCellClick={onCellClick} hiddenEl="g"/>
-    );
+  const [tries, setTries] = useState({
+    onetry: 0,
   });
 
-  console.log(listOfCells);
+  const changeTry = () => {
+    const triesCopy = {...tries};
+    triesCopy.onetry++;
+
+    setTries(triesCopy);
+  };
+
+  const onCellClick = (id: number) => {
+    changeTry();
+    const itemsCopy = [...items];
+    itemsCopy.forEach(item => {
+      if(item.id === id) {
+        item.class = 'cell-open';
+        item.clicked = true;
+      }
+    });
+
+    setItems(itemsCopy);
+  };
+
+  const createDesk = () => {
+    return <Board items={items} onCellClick={onCellClick}/>
+  };
+
+  const resetGame = () => {
+    const triesCopy = {...tries};
+    triesCopy.onetry = 0;
+
+    const itemsCopy = [...items];
+    itemsCopy.forEach(item => {
+      item.class = 'cell';
+    });
+
+    setItems(itemsCopy);
+    setTries(triesCopy);
+  };
 
   return (
     <div className="App">
-      <div className="container">
-        <div className="wrapper">
-          {listOfCells}
+          {createDesk()}
+        <div>Tries{tries.onetry}
+          <ResetButton onClick={resetGame}/>
         </div>
-      </div>
-
     </div>
   );
 }
