@@ -35,10 +35,15 @@ const App = () => {
   };
 
   const onCellClick = (id: number) => {
-    changeTry();
+
     const itemsCopy = [...items];
-    itemsCopy.forEach(item => {
+
+    if(itemsCopy[id].clicked === false){
+      changeTry();
+    }
+      itemsCopy.forEach(item => {
       if(item.id === id) {
+
         item.class = 'cell-open';
         item.clicked = true;
       }
